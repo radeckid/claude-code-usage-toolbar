@@ -1,0 +1,402 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0283265B2479534B3702DE60 /* ClaudeUsageBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEBF09448BC32D006D5D496 /* ClaudeUsageBarApp.swift */; };
+		06D351B96744C4F3BCA70937 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03A30B8ECDE6FB22CFF9236A /* Assets.xcassets */; };
+		1B20D6116728091CAF75CA48 /* RateLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */; };
+		42EA400A4C03C8555F8CCB98 /* UsageDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9528D3426479ABABC8316F3D /* UsageDashboardViewModel.swift */; };
+		67F2E0492F5724C8000519D3 /* ClaudeStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */; };
+		67F2E04B2F5724CD000519D3 /* ClaudeStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */; };
+		67F2E04D2F5724EA000519D3 /* ClaudeStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */; };
+		6FC08ABF53B89561DE28ECF0 /* OAuthUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */; };
+		8207A9C434CE0F1B8B8B2F25 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */; };
+		AB12186C363EEE55A851FE84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FBC746DA2D3B54BA6E54E /* SettingsView.swift */; };
+		C3489CF22A4C39EC13A4443C /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */; };
+		D39756709B8D33E383157E48 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */; };
+		DF54EB1F1F45612BF14F983C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B167ADC160C2A3CFDD6B654B /* Localization.swift */; };
+		E3ADB866A9D8CFAED5F26853 /* OAuthUsageResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F75E4D76C17D59152113DE4 /* OAuthUsageResponse.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		03A30B8ECDE6FB22CFF9236A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		046FBC746DA2D3B54BA6E54E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2A20B9436364380A70942C1B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
+		5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUsageService.swift; sourceTree = "<group>"; };
+		5F75E4D76C17D59152113DE4 /* OAuthUsageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUsageResponse.swift; sourceTree = "<group>"; };
+		67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusResponse.swift; sourceTree = "<group>"; };
+		67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusService.swift; sourceTree = "<group>"; };
+		67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusView.swift; sourceTree = "<group>"; };
+		6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ClaudeUsageBar.app; path = "Claude Usage Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimitView.swift; sourceTree = "<group>"; };
+		9528D3426479ABABC8316F3D /* UsageDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageDashboardViewModel.swift; sourceTree = "<group>"; };
+		ADEBD07375E342E6ABD0D140 /* ClaudeUsageBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClaudeUsageBar.entitlements; sourceTree = "<group>"; };
+		B167ADC160C2A3CFDD6B654B /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		FBEBF09448BC32D006D5D496 /* ClaudeUsageBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeUsageBarApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0F4D5D38DB7BC9438BB09C8D /* ClaudeUsageBar */ = {
+			isa = PBXGroup;
+			children = (
+				ADEBD07375E342E6ABD0D140 /* ClaudeUsageBar.entitlements */,
+				FBEBF09448BC32D006D5D496 /* ClaudeUsageBarApp.swift */,
+				2A20B9436364380A70942C1B /* Info.plist */,
+				D6AC4ACCFF7656FE5DF21015 /* Models */,
+				4A4C04CCD3E1A7BEAEA2D798 /* Resources */,
+				C834F5116BFD7690874934C9 /* Services */,
+				73D02FEF5CAFA4A3D97CE36F /* Utilities */,
+				73E4DC3E1D6FBAB8C6E1FBAC /* ViewModels */,
+				E3E6ADDD1D00072E6D5BCA96 /* Views */,
+			);
+			path = ClaudeUsageBar;
+			sourceTree = "<group>";
+		};
+		4A4C04CCD3E1A7BEAEA2D798 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				03A30B8ECDE6FB22CFF9236A /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6868CB6E4C51E47D4BC5D08A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		73D02FEF5CAFA4A3D97CE36F /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B167ADC160C2A3CFDD6B654B /* Localization.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		73E4DC3E1D6FBAB8C6E1FBAC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9528D3426479ABABC8316F3D /* UsageDashboardViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		78C859AC117EE65996599E14 = {
+			isa = PBXGroup;
+			children = (
+				0F4D5D38DB7BC9438BB09C8D /* ClaudeUsageBar */,
+				6868CB6E4C51E47D4BC5D08A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C834F5116BFD7690874934C9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */,
+				5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */,
+				67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D6AC4ACCFF7656FE5DF21015 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */,
+				5F75E4D76C17D59152113DE4 /* OAuthUsageResponse.swift */,
+				67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E3E6ADDD1D00072E6D5BCA96 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */,
+				878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */,
+				046FBC746DA2D3B54BA6E54E /* SettingsView.swift */,
+				67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		593184D7CF91A0C869E15E43 /* ClaudeUsageBar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B3DB8DF6992B7D47817CE567 /* Build configuration list for PBXNativeTarget "ClaudeUsageBar" */;
+			buildPhases = (
+				5F2CCD1993E006B8D596BDE8 /* Sources */,
+				4C65E13F7960AA4A97D68E00 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ClaudeUsageBar;
+			packageProductDependencies = (
+			);
+			productName = ClaudeUsageBar;
+			productReference = 6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D83CF4BCD1130F11315307D2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 2D12AE2B7612A9522B76FABD /* Build configuration list for PBXProject "ClaudeUsageBar" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 78C859AC117EE65996599E14;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				593184D7CF91A0C869E15E43 /* ClaudeUsageBar */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C65E13F7960AA4A97D68E00 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06D351B96744C4F3BCA70937 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5F2CCD1993E006B8D596BDE8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67F2E0492F5724C8000519D3 /* ClaudeStatusResponse.swift in Sources */,
+				D39756709B8D33E383157E48 /* AppSettings.swift in Sources */,
+				0283265B2479534B3702DE60 /* ClaudeUsageBarApp.swift in Sources */,
+				C3489CF22A4C39EC13A4443C /* KeychainService.swift in Sources */,
+				DF54EB1F1F45612BF14F983C /* Localization.swift in Sources */,
+				67F2E04D2F5724EA000519D3 /* ClaudeStatusView.swift in Sources */,
+				8207A9C434CE0F1B8B8B2F25 /* MenuBarContentView.swift in Sources */,
+				E3ADB866A9D8CFAED5F26853 /* OAuthUsageResponse.swift in Sources */,
+				6FC08ABF53B89561DE28ECF0 /* OAuthUsageService.swift in Sources */,
+				1B20D6116728091CAF75CA48 /* RateLimitView.swift in Sources */,
+				AB12186C363EEE55A851FE84 /* SettingsView.swift in Sources */,
+				42EA400A4C03C8555F8CCB98 /* UsageDashboardViewModel.swift in Sources */,
+				67F2E04B2F5724CD000519D3 /* ClaudeStatusService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		14AF191ACFFF67FDA63A0FC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ClaudeUsageBar/ClaudeUsageBar.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClaudeUsageBar/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.claudeusagebar.app;
+				PRODUCT_NAME = "Claude Usage Bar";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		70266C3CA273BAEB64E7190D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A7268182CDDF948FEE6B19AD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ClaudeUsageBar/ClaudeUsageBar.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClaudeUsageBar/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.claudeusagebar.app;
+				PRODUCT_NAME = "Claude Usage Bar";
+				SDKROOT = macosx;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+		C36372A93A0C0CCF4C7AB556 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2D12AE2B7612A9522B76FABD /* Build configuration list for PBXProject "ClaudeUsageBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70266C3CA273BAEB64E7190D /* Debug */,
+				C36372A93A0C0CCF4C7AB556 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B3DB8DF6992B7D47817CE567 /* Build configuration list for PBXNativeTarget "ClaudeUsageBar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14AF191ACFFF67FDA63A0FC1 /* Debug */,
+				A7268182CDDF948FEE6B19AD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D83CF4BCD1130F11315307D2 /* Project object */;
+}
