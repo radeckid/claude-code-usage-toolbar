@@ -258,6 +258,20 @@ enum L10n {
         }
     }
 
+    static func checkForUpdates(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "Check for Updates..."
+        case .polish: return "Sprawdź aktualizacje..."
+        }
+    }
+
+    static func updateAvailable(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "New version available"
+        case .polish: return "Dostępna nowa wersja"
+        }
+    }
+
     // MARK: - Claude Status
 
     static func claudeStatus(_ lang: AppLanguage) -> String {

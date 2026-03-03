@@ -3,10 +3,11 @@ import SwiftUI
 @main
 struct ClaudeUsageBarApp: App {
     @State private var viewModel = UsageDashboardViewModel()
+    @State private var softwareUpdater = SoftwareUpdater()
 
     var body: some Scene {
         MenuBarExtra {
-            MenuBarContentView(viewModel: viewModel)
+            MenuBarContentView(viewModel: viewModel, softwareUpdater: softwareUpdater)
                 .frame(width: 320)
         } label: {
             MenuBarLabel(viewModel: viewModel)
@@ -14,7 +15,7 @@ struct ClaudeUsageBarApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(viewModel: viewModel)
+            SettingsView(viewModel: viewModel, softwareUpdater: softwareUpdater)
         }
     }
 }

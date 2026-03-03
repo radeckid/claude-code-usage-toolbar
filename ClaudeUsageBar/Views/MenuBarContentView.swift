@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarContentView: View {
     @Bindable var viewModel: UsageDashboardViewModel
+    var softwareUpdater: SoftwareUpdater
 
     private var lang: AppLanguage { viewModel.settings.language }
 
@@ -38,6 +39,11 @@ struct MenuBarContentView: View {
             ClaudeStatusView(service: viewModel.statusService, lang: lang)
             Divider()
             footerSection
+
+            if softwareUpdater.updateAvailable {
+                Divider()
+                updateBanner
+            }
         }
     }
 
@@ -115,5 +121,34 @@ struct MenuBarContentView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Update Banner
+
+    private var updateBanner: some View {
+        Button {
+            softwareUpdater.checkForUpdates()
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "arrow.down.circle.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(.white)
+                Text(L10n.updateAvailable(lang))
+                    .font(.subheadline.weight(.medium))
+                    .foregroundStyle(.white)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.6))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .background(.blue, in: RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
     }
 }

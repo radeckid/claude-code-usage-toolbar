@@ -47,4 +47,4 @@ Requires Xcode 15+ and the `gh` CLI for releases.
 
 ## Author
 
-Damian Radecki
+Damian "Damrad" Radecki

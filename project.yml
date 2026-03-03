@@ -11,6 +11,13 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
+    DEAD_CODE_STRIPPING: true
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: "2.6.0"
 
 targets:
   ClaudeUsageBar:
@@ -18,13 +25,15 @@ targets:
     platform: macOS
     sources:
       - ClaudeUsageBar
+    dependencies:
+      - package: Sparkle
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.claudeusagebar.app
         INFOPLIST_FILE: ClaudeUsageBar/Info.plist
         CODE_SIGN_ENTITLEMENTS: ClaudeUsageBar/ClaudeUsageBar.entitlements
         PRODUCT_NAME: "Claude Usage Bar"
-        MARKETING_VERSION: "1.0.0"
+        MARKETING_VERSION: "1.0.1"
         CURRENT_PROJECT_VERSION: "1"
         COMBINE_HIDPI_IMAGES: true
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
@@ -34,3 +43,6 @@ targets:
       path: ClaudeUsageBar/Info.plist
       properties:
         LSUIElement: true
+        SUFeedURL: "https://github.com/radeckid/claude-code-usage-toolbar/releases/latest/download/appcast.xml"
+        SUPublicEDKey: "n648BK88MGKXAyciuYaGS7ET/GzExraKeVxevFCOoAs="
+        SUEnableAutomaticChecks: true

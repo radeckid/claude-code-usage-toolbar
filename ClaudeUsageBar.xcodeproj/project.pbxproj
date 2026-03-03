@@ -3,20 +3,22 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0283265B2479534B3702DE60 /* ClaudeUsageBarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEBF09448BC32D006D5D496 /* ClaudeUsageBarApp.swift */; };
 		06D351B96744C4F3BCA70937 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03A30B8ECDE6FB22CFF9236A /* Assets.xcassets */; };
+		0C0D2A0B7C10DF0A685AE061 /* SoftwareUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB48B1C85F55094A127BC0C /* SoftwareUpdater.swift */; };
+		0C3A4A5D02CA956E4A6BE3FA /* ClaudeStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC39A0235698C78F5930C5B /* ClaudeStatusResponse.swift */; };
 		1B20D6116728091CAF75CA48 /* RateLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */; };
+		28503E955C176DB6975091C1 /* ClaudeStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7710191208E3C11BB41C1D4C /* ClaudeStatusService.swift */; };
+		3CA3CC8E80131DDDF2367AF1 /* ClaudeStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58377DD12A4B77F24846763B /* ClaudeStatusView.swift */; };
 		42EA400A4C03C8555F8CCB98 /* UsageDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9528D3426479ABABC8316F3D /* UsageDashboardViewModel.swift */; };
-		67F2E0492F5724C8000519D3 /* ClaudeStatusResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */; };
-		67F2E04B2F5724CD000519D3 /* ClaudeStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */; };
-		67F2E04D2F5724EA000519D3 /* ClaudeStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */; };
 		6FC08ABF53B89561DE28ECF0 /* OAuthUsageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */; };
 		8207A9C434CE0F1B8B8B2F25 /* MenuBarContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */; };
 		AB12186C363EEE55A851FE84 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046FBC746DA2D3B54BA6E54E /* SettingsView.swift */; };
+		BEE81B2BCC229C0D9FE00D65 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = DF1FF117989CCFE10283FE76 /* Sparkle */; };
 		C3489CF22A4C39EC13A4443C /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */; };
 		D39756709B8D33E383157E48 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */; };
 		DF54EB1F1F45612BF14F983C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = B167ADC160C2A3CFDD6B654B /* Localization.swift */; };
@@ -26,22 +28,34 @@
 /* Begin PBXFileReference section */
 		03A30B8ECDE6FB22CFF9236A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		046FBC746DA2D3B54BA6E54E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		0EC39A0235698C78F5930C5B /* ClaudeStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusResponse.swift; sourceTree = "<group>"; };
 		2A20B9436364380A70942C1B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarContentView.swift; sourceTree = "<group>"; };
 		5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUsageService.swift; sourceTree = "<group>"; };
+		58377DD12A4B77F24846763B /* ClaudeStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusView.swift; sourceTree = "<group>"; };
 		5F75E4D76C17D59152113DE4 /* OAuthUsageResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthUsageResponse.swift; sourceTree = "<group>"; };
-		67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusResponse.swift; sourceTree = "<group>"; };
-		67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusService.swift; sourceTree = "<group>"; };
-		67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusView.swift; sourceTree = "<group>"; };
-		6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ClaudeUsageBar.app; path = "Claude Usage Bar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudeUsageBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7710191208E3C11BB41C1D4C /* ClaudeStatusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeStatusService.swift; sourceTree = "<group>"; };
 		7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateLimitView.swift; sourceTree = "<group>"; };
 		9528D3426479ABABC8316F3D /* UsageDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageDashboardViewModel.swift; sourceTree = "<group>"; };
 		ADEBD07375E342E6ABD0D140 /* ClaudeUsageBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ClaudeUsageBar.entitlements; sourceTree = "<group>"; };
 		B167ADC160C2A3CFDD6B654B /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		BEB48B1C85F55094A127BC0C /* SoftwareUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareUpdater.swift; sourceTree = "<group>"; };
 		C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		FBEBF09448BC32D006D5D496 /* ClaudeUsageBarApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeUsageBarApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DFAF1158C5CCC94A3185513E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BEE81B2BCC229C0D9FE00D65 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0F4D5D38DB7BC9438BB09C8D /* ClaudeUsageBar */ = {
@@ -103,9 +117,10 @@
 		C834F5116BFD7690874934C9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7710191208E3C11BB41C1D4C /* ClaudeStatusService.swift */,
 				C8B1F0226B58FA6C31AA7F93 /* KeychainService.swift */,
 				5304A47D7DB5BED131C5EAF3 /* OAuthUsageService.swift */,
-				67F2E04A2F5724CD000519D3 /* ClaudeStatusService.swift */,
+				BEB48B1C85F55094A127BC0C /* SoftwareUpdater.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -114,8 +129,8 @@
 			isa = PBXGroup;
 			children = (
 				7C18FA3C0D374E3C11E19ADC /* AppSettings.swift */,
+				0EC39A0235698C78F5930C5B /* ClaudeStatusResponse.swift */,
 				5F75E4D76C17D59152113DE4 /* OAuthUsageResponse.swift */,
-				67F2E0482F5724C8000519D3 /* ClaudeStatusResponse.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -123,10 +138,10 @@
 		E3E6ADDD1D00072E6D5BCA96 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				58377DD12A4B77F24846763B /* ClaudeStatusView.swift */,
 				46E698B1D39AE65F1C3971A5 /* MenuBarContentView.swift */,
 				878696CF6E6EBF3FA539BE59 /* RateLimitView.swift */,
 				046FBC746DA2D3B54BA6E54E /* SettingsView.swift */,
-				67F2E04C2F5724EA000519D3 /* ClaudeStatusView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -140,6 +155,7 @@
 			buildPhases = (
 				5F2CCD1993E006B8D596BDE8 /* Sources */,
 				4C65E13F7960AA4A97D68E00 /* Resources */,
+				DFAF1158C5CCC94A3185513E /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -147,6 +163,7 @@
 			);
 			name = ClaudeUsageBar;
 			packageProductDependencies = (
+				DF1FF117989CCFE10283FE76 /* Sparkle */,
 			);
 			productName = ClaudeUsageBar;
 			productReference = 6C0066D9CF174EA4F3BD4CE4 /* ClaudeUsageBar.app */;
@@ -171,6 +188,10 @@
 			);
 			mainGroup = 78C859AC117EE65996599E14;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				26F1AA61732FC6689698C543 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -195,19 +216,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67F2E0492F5724C8000519D3 /* ClaudeStatusResponse.swift in Sources */,
 				D39756709B8D33E383157E48 /* AppSettings.swift in Sources */,
+				0C3A4A5D02CA956E4A6BE3FA /* ClaudeStatusResponse.swift in Sources */,
+				28503E955C176DB6975091C1 /* ClaudeStatusService.swift in Sources */,
+				3CA3CC8E80131DDDF2367AF1 /* ClaudeStatusView.swift in Sources */,
 				0283265B2479534B3702DE60 /* ClaudeUsageBarApp.swift in Sources */,
 				C3489CF22A4C39EC13A4443C /* KeychainService.swift in Sources */,
 				DF54EB1F1F45612BF14F983C /* Localization.swift in Sources */,
-				67F2E04D2F5724EA000519D3 /* ClaudeStatusView.swift in Sources */,
 				8207A9C434CE0F1B8B8B2F25 /* MenuBarContentView.swift in Sources */,
 				E3ADB866A9D8CFAED5F26853 /* OAuthUsageResponse.swift in Sources */,
 				6FC08ABF53B89561DE28ECF0 /* OAuthUsageService.swift in Sources */,
 				1B20D6116728091CAF75CA48 /* RateLimitView.swift in Sources */,
 				AB12186C363EEE55A851FE84 /* SettingsView.swift in Sources */,
+				0C0D2A0B7C10DF0A685AE061 /* SoftwareUpdater.swift in Sources */,
 				42EA400A4C03C8555F8CCB98 /* UsageDashboardViewModel.swift in Sources */,
-				67F2E04B2F5724CD000519D3 /* ClaudeStatusService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,9 +291,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -353,9 +377,11 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -397,6 +423,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		26F1AA61732FC6689698C543 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DF1FF117989CCFE10283FE76 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 26F1AA61732FC6689698C543 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D83CF4BCD1130F11315307D2 /* Project object */;
 }

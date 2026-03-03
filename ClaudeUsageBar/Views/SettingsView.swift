@@ -3,6 +3,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @Bindable var viewModel: UsageDashboardViewModel
+    var softwareUpdater: SoftwareUpdater
 
     private var lang: AppLanguage { viewModel.settings.language }
 
@@ -74,16 +75,23 @@ struct SettingsView: View {
                 .foregroundStyle(.purple)
             Text("Claude Usage Bar")
                 .font(.title2.bold())
-            Text("Version 1.0.0")
+            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "?")")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Text("by Damian Radecki")
+            Text("by Damian \"Damrad\" Radecki")
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text(L10n.aboutDescription(lang))
                 .font(.caption)
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
+
+            Button(L10n.checkForUpdates(lang)) {
+                softwareUpdater.checkForUpdates()
+            }
+            .disabled(!softwareUpdater.canCheckForUpdates)
+            .buttonStyle(.bordered)
+            .controlSize(.small)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

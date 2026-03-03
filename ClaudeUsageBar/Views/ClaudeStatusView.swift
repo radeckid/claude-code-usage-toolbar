@@ -122,6 +122,7 @@ struct ClaudeStatusView: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(8)
         .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
     }
