@@ -33,8 +33,8 @@ xcodebuild \
     -quiet \
     ONLY_ACTIVE_ARCH=NO
 
-# Find the built .app
-APP_PATH=$(find "$BUILD_DIR/DerivedData" -name "*.app" -type d | head -1)
+# Find the built .app (match by product name to avoid picking up Sparkle's Updater.app)
+APP_PATH=$(find "$BUILD_DIR/DerivedData/Build/Products" -name "$APP_NAME.app" -type d | head -1)
 
 if [ -z "$APP_PATH" ]; then
     echo "ERROR: Could not find built .app"
