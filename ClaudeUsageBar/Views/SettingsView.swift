@@ -28,6 +28,7 @@ struct SettingsView: View {
             Section(L10n.refreshSection(lang)) {
                 Picker(L10n.autoRefreshEvery(lang), selection: $viewModel.settings.refreshIntervalSeconds) {
                     Text(L10n.minute1(lang)).tag(60)
+                    Text(L10n.minutes2(lang)).tag(120)
                     Text(L10n.minutes5(lang)).tag(300)
                     Text(L10n.minutes15(lang)).tag(900)
                     Text(L10n.minutes30(lang)).tag(1800)

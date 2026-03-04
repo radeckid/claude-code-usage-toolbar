@@ -230,6 +230,13 @@ enum L10n {
         }
     }
 
+    static func minutes2(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "2 minutes"
+        case .polish: return "2 minuty"
+        }
+    }
+
     static func minutes5(_ lang: AppLanguage) -> String {
         switch lang {
         case .english: return "5 minutes"
