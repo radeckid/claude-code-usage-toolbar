@@ -123,6 +123,10 @@ final class UsageDashboardViewModel {
             case .keychainError:
                 lastError = L10n.keychainNotFound(settings.language)
                 errorKind = .auth
+            case .rateLimited:
+                // Keep existing data visible, just show a warning
+                lastError = L10n.rateLimitedMessage(settings.language)
+                errorKind = .other
             default:
                 lastError = error.localizedDescription
                 errorKind = .other

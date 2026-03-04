@@ -151,6 +151,13 @@ enum L10n {
         }
     }
 
+    static func rateLimitedMessage(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "Too many requests (429).\nShowing last known data."
+        case .polish: return "Zbyt wiele zapytań (429).\nWyświetlam ostatnie dane."
+        }
+    }
+
     // MARK: - Settings
 
     static func settingsTitle(_ lang: AppLanguage) -> String {

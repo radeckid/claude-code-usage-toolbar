@@ -17,6 +17,19 @@ struct MenuBarContentView: View {
             } else if !viewModel.hasData && viewModel.lastError != nil {
                 noDataView
             } else if viewModel.hasData {
+                if let warning = viewModel.lastError {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                        Text(warning)
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 8)
+                }
                 RateLimitView(
                     sessionUtilization: viewModel.sessionUtilization,
                     sessionResetsAt: viewModel.sessionResetsAt,

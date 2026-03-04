@@ -6,6 +6,7 @@ enum OAuthUsageError: LocalizedError, Sendable {
     case invalidResponse(Int)
     case parseError(String)
     case sessionExpired
+    case rateLimited
 
     var errorDescription: String? {
         switch self {
@@ -19,12 +20,17 @@ enum OAuthUsageError: LocalizedError, Sendable {
             return "Parse: \(msg)"
         case .sessionExpired:
             return "Session expired"
+        case .rateLimited:
+            return "Rate limited (429)"
         }
     }
 }
 
 final class OAuthUsageService: Sendable {
     private static let usageURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
+    private static let maxRetries = 3
+    private static let baseDelay: TimeInterval = 2
+
     private let keychainService = KeychainService()
 
     func fetchUsage() async throws -> OAuthUsageResponse {
@@ -55,6 +61,12 @@ final class OAuthUsageService: Sendable {
             return try retry.get()
         }
 
+        // If 429, retry with exponential backoff
+        if case .failure(let error) = result,
+           case .rateLimited = error {
+            return try await retryWithBackoff(token: token)
+        }
+
         return try result.get()
     }
 
@@ -64,6 +76,24 @@ final class OAuthUsageService: Sendable {
         } catch {
             throw OAuthUsageError.keychainError(error.localizedDescription)
         }
+    }
+
+    private func retryWithBackoff(token: String) async throws -> OAuthUsageResponse {
+        for attempt in 1...Self.maxRetries {
+            let delay = Self.baseDelay * pow(2.0, Double(attempt - 1)) // 2s, 4s, 8s
+            try await Task.sleep(for: .seconds(delay))
+
+            let result = try await callAPI(token: token)
+            switch result {
+            case .success(let response):
+                return response
+            case .failure(.rateLimited):
+                continue
+            case .failure(let error):
+                throw error
+            }
+        }
+        throw OAuthUsageError.rateLimited
     }
 
     private func callAPI(token: String) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
@@ -81,6 +111,17 @@ final class OAuthUsageService: Sendable {
             (data, response) = try await URLSession.shared.data(for: request)
         } catch {
             throw OAuthUsageError.networkError(error.localizedDescription)
+        }
+
+        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
+            // Use Retry-After header if available, otherwise fall back to default backoff
+            if let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After"),
+               let delay = TimeInterval(retryAfter) {
+                try? await Task.sleep(for: .seconds(delay))
+                // Re-attempt once using the server-suggested delay
+                return try await callAPI(token: token)
+            }
+            return .failure(.rateLimited)
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
