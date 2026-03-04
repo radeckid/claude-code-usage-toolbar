@@ -5,6 +5,14 @@ macOS menu bar app that shows your Claude Pro/Team usage limits in real time.
 ![macOS](https://img.shields.io/badge/macOS-14%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.10-orange)
 
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/en.png" alt="Claude Usage Bar - English" width="320">
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="screenshots/pl.png" alt="Claude Usage Bar - Polish" width="320">
+</p>
+
 ## Features
 
 - **Menu bar indicator** — circular progress ring with usage percentage, always visible
