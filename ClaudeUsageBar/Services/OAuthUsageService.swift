@@ -102,6 +102,41 @@ final class OAuthUsageService: Sendable {
         }
     }
 
+    // MARK: - Retry-After Parsing
+
+    private static let httpDateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
+        return f
+    }()
+
+    /// Parse Retry-After from header (seconds or HTTP-date) or from JSON body (error.metadata.retry_after)
+    private static func parseRetryAfter(_ response: HTTPURLResponse, body: Data) -> TimeInterval? {
+        // 1. Try Retry-After header as seconds
+        if let headerValue = response.value(forHTTPHeaderField: "Retry-After") {
+            if let seconds = TimeInterval(headerValue) {
+                return seconds
+            }
+            // 2. Try Retry-After header as HTTP-date
+            if let date = httpDateFormatter.date(from: headerValue) {
+                let seconds = date.timeIntervalSinceNow
+                return seconds > 0 ? seconds : nil
+            }
+        }
+
+        // 3. Try JSON body — Anthropic error format: { "error": { "metadata": { "retry_after": 2100 } } }
+        if let json = try? JSONSerialization.jsonObject(with: body) as? [String: Any],
+           let error = json["error"] as? [String: Any],
+           let metadata = error["metadata"] as? [String: Any] {
+            if let retryAfter = metadata["retry_after"] as? TimeInterval {
+                return retryAfter
+            }
+        }
+
+        return nil
+    }
+
     private func callAPI(token: String) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
         var request = URLRequest(url: Self.usageURL)
         request.httpMethod = "GET"
@@ -120,9 +155,8 @@ final class OAuthUsageService: Sendable {
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
-            let retryAfterSeconds = httpResponse.value(forHTTPHeaderField: "Retry-After")
-                .flatMap { TimeInterval($0) }
-            return .failure(.rateLimited(retryAfter: retryAfterSeconds))
+            let retryAfter = Self.parseRetryAfter(httpResponse, body: data)
+            return .failure(.rateLimited(retryAfter: retryAfter))
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
