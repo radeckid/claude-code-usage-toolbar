@@ -29,7 +29,8 @@ struct MenuBarContentView: View {
                             .lineLimit(2)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 8)
+                    .padding(.top, 12)
+                    .padding(.bottom, -8)
                 }
                 RateLimitView(
                     sessionUtilization: viewModel.sessionUtilization,

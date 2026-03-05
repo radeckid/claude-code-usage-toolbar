@@ -44,11 +44,9 @@ final class OAuthUsageService: Sendable {
 
         let result = try await callAPI(token: token)
 
-        // If 401, token might have expired — invalidate and retry from source
+        // If 401, token might have rotated — retry once with fresh read
         if case .failure(let error) = result,
            case .invalidResponse(401) = error {
-            keychainService.invalidateToken()
-
             let freshToken: String
             do {
                 freshToken = try readToken()
@@ -60,7 +58,6 @@ final class OAuthUsageService: Sendable {
 
             if case .failure(let retryError) = retry,
                case .invalidResponse(401) = retryError {
-                keychainService.invalidateToken()
                 throw OAuthUsageError.sessionExpired
             }
 
@@ -69,13 +66,12 @@ final class OAuthUsageService: Sendable {
             return response
         }
 
-        // If 429, return cached data immediately — no retries
-        if case .failure(let error) = result,
-           case .rateLimited(let retryAfter) = error {
+        // If 429, fall back to cache
+        if case .failure(.rateLimited(let retryAfter)) = result {
             if let cached = loadCache() {
                 throw OAuthUsageError.rateLimitedWithCache(cached: cached, retryAfter: retryAfter)
             }
-            throw error
+            throw OAuthUsageError.rateLimited(retryAfter: retryAfter)
         }
 
         let response = try result.get()
@@ -102,41 +98,6 @@ final class OAuthUsageService: Sendable {
         }
     }
 
-    // MARK: - Retry-After Parsing
-
-    private static let httpDateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.locale = Locale(identifier: "en_US_POSIX")
-        f.dateFormat = "EEE, dd MMM yyyy HH:mm:ss zzz"
-        return f
-    }()
-
-    /// Parse Retry-After from header (seconds or HTTP-date) or from JSON body (error.metadata.retry_after)
-    private static func parseRetryAfter(_ response: HTTPURLResponse, body: Data) -> TimeInterval? {
-        // 1. Try Retry-After header as seconds
-        if let headerValue = response.value(forHTTPHeaderField: "Retry-After") {
-            if let seconds = TimeInterval(headerValue) {
-                return seconds
-            }
-            // 2. Try Retry-After header as HTTP-date
-            if let date = httpDateFormatter.date(from: headerValue) {
-                let seconds = date.timeIntervalSinceNow
-                return seconds > 0 ? seconds : nil
-            }
-        }
-
-        // 3. Try JSON body — Anthropic error format: { "error": { "metadata": { "retry_after": 2100 } } }
-        if let json = try? JSONSerialization.jsonObject(with: body) as? [String: Any],
-           let error = json["error"] as? [String: Any],
-           let metadata = error["metadata"] as? [String: Any] {
-            if let retryAfter = metadata["retry_after"] as? TimeInterval {
-                return retryAfter
-            }
-        }
-
-        return nil
-    }
-
     private func callAPI(token: String) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
         var request = URLRequest(url: Self.usageURL)
         request.httpMethod = "GET"
@@ -155,8 +116,12 @@ final class OAuthUsageService: Sendable {
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
-            let retryAfter = Self.parseRetryAfter(httpResponse, body: data)
-            return .failure(.rateLimited(retryAfter: retryAfter))
+            let retryAfter = httpResponse.allHeaderFields.first {
+                ($0.key as? String)?.lowercased() == "retry-after"
+            }?.value as? String
+            let seconds = retryAfter.flatMap { TimeInterval($0) }
+            let effective = (seconds ?? 0) > 0 ? seconds : nil
+            return .failure(.rateLimited(retryAfter: effective))
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {

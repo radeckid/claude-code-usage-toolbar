@@ -44,7 +44,6 @@ final class UsageDashboardViewModel {
     @ObservationIgnored private let oauthService = OAuthUsageService()
     let statusService = ClaudeStatusService()
     @ObservationIgnored private var timerTask: Task<Void, Never>?
-    @ObservationIgnored private var retryAfterOverride: TimeInterval?
 
     nonisolated(unsafe) private static let iso8601Formatter: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()
@@ -81,7 +80,6 @@ final class UsageDashboardViewModel {
             let response = try await oauthService.fetchUsage()
             applyResponse(response)
             lastFetchDate = Date()
-            retryAfterOverride = nil
             _ = await statusFetch
         } catch let error as OAuthUsageError {
             switch error {
@@ -92,19 +90,21 @@ final class UsageDashboardViewModel {
                 lastError = L10n.keychainNotFound(settings.language)
                 errorKind = .auth
             case .rateLimited(let retryAfter):
-                retryAfterOverride = retryAfter
                 lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
                 errorKind = .other
             case .rateLimitedWithCache(let cached, let retryAfter):
                 applyCachedResponse(cached)
-                retryAfterOverride = retryAfter
+                lastFetchDate = Date()
                 lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
                 errorKind = .other
             default:
                 lastError = error.localizedDescription
                 errorKind = .other
             }
+        } catch is CancellationError {
+            // Task was cancelled (e.g. timer restart) — ignore silently
         } catch {
+            if (error as? URLError)?.code == .cancelled { return }
             lastError = error.localizedDescription
             errorKind = .other
         }
@@ -113,26 +113,27 @@ final class UsageDashboardViewModel {
     }
 
     func manualRefresh() async {
-        retryAfterOverride = nil
         await refresh()
-        restartAutoRefresh()
+        startAutoRefresh(immediate: false)
     }
 
     func restartAutoRefresh() {
-        startAutoRefresh()
+        startAutoRefresh(immediate: false)
     }
 
     // MARK: - Auto Refresh
 
-    func startAutoRefresh() {
+    func startAutoRefresh(immediate: Bool = true) {
         timerTask?.cancel()
         timerTask = Task { [weak self] in
-            while !Task.isCancelled {
+            if immediate {
                 await self?.refresh()
-                let retryAfter = self?.retryAfterOverride
-                let normalInterval = self?.settings.refreshIntervalSeconds ?? 300
-                let interval = max(Double(normalInterval), retryAfter ?? 0)
-                try? await Task.sleep(for: .seconds(interval))
+            }
+            while !Task.isCancelled {
+                let interval = self?.settings.refreshIntervalSeconds ?? 300
+                try? await Task.sleep(for: .seconds(Double(interval)))
+                guard !Task.isCancelled else { break }
+                await self?.refresh()
             }
         }
     }
@@ -176,7 +177,6 @@ final class UsageDashboardViewModel {
 
     private func applyCachedResponse(_ response: OAuthUsageResponse) {
         applyResponse(response)
-        // Don't update lastFetchDate — it's cached data, not fresh
     }
 
     private static func parseISO8601(_ string: String) -> Date? {
