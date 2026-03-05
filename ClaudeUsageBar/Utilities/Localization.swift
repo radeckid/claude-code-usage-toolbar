@@ -177,8 +177,8 @@ enum L10n {
         }
 
         switch lang {
-        case .english: return "\(base)\nShowing last known data."
-        case .polish: return "\(base)\nWyświetlam ostatnie dane."
+        case .english: return "\(base)\nTry again later."
+        case .polish: return "\(base)\nSpróbuj ponownie później."
         }
     }
 

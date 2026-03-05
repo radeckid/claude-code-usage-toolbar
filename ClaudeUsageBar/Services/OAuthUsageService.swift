@@ -7,6 +7,7 @@ enum OAuthUsageError: LocalizedError, Sendable {
     case parseError(String)
     case sessionExpired
     case rateLimited(retryAfter: TimeInterval?)
+    case rateLimitedWithCache(cached: OAuthUsageResponse, retryAfter: TimeInterval?)
 
     var errorDescription: String? {
         switch self {
@@ -20,7 +21,7 @@ enum OAuthUsageError: LocalizedError, Sendable {
             return "Parse: \(msg)"
         case .sessionExpired:
             return "Session expired"
-        case .rateLimited:
+        case .rateLimited, .rateLimitedWithCache:
             return "Rate limited (429)"
         }
     }
@@ -30,6 +31,13 @@ final class OAuthUsageService: Sendable {
     private static let usageURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
     private static let maxRetries = 3
     private static let baseDelay: TimeInterval = 2
+
+    private static let cacheURL: URL = {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let dir = appSupport.appendingPathComponent("ClaudeUsageBar", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        return dir.appendingPathComponent("last_usage.json")
+    }()
 
     private let keychainService = KeychainService()
 
@@ -58,16 +66,38 @@ final class OAuthUsageService: Sendable {
                 throw OAuthUsageError.sessionExpired
             }
 
-            return try retry.get()
+            let response = try retry.get()
+            saveCache(response)
+            return response
         }
 
         // If 429, retry with exponential backoff
         if case .failure(let error) = result,
            case .rateLimited = error {
-            return try await retryWithBackoff(token: token)
+            do {
+                return try await retryWithBackoff(token: token)
+            } catch let retryError as OAuthUsageError {
+                if case .rateLimited(let retryAfter) = retryError, let cached = loadCache() {
+                    throw OAuthUsageError.rateLimitedWithCache(cached: cached, retryAfter: retryAfter)
+                }
+                throw retryError
+            }
         }
 
-        return try result.get()
+        let response = try result.get()
+        saveCache(response)
+        return response
+    }
+
+    // MARK: - Cache
+
+    private func saveCache(_ response: OAuthUsageResponse) {
+        try? JSONEncoder().encode(response).write(to: Self.cacheURL)
+    }
+
+    func loadCache() -> OAuthUsageResponse? {
+        guard let data = try? Data(contentsOf: Self.cacheURL) else { return nil }
+        return try? JSONDecoder().decode(OAuthUsageResponse.self, from: data)
     }
 
     private func readToken() throws -> String {

@@ -78,41 +78,7 @@ final class UsageDashboardViewModel {
         do {
             async let statusFetch: Void = statusService.fetch()
             let response = try await oauthService.fetchUsage()
-
-            if let fiveHour = response.fiveHour, let util = fiveHour.utilization {
-                sessionUtilization = util
-                sessionResetsAt = fiveHour.resetsAt.flatMap { Self.parseISO8601($0) }
-            }
-
-            if let sevenDay = response.sevenDay, let util = sevenDay.utilization {
-                weekUtilization = util
-                weekResetsAt = sevenDay.resetsAt.flatMap { Self.parseISO8601($0) }
-            }
-
-            // Model-specific window (Sonnet or Opus)
-            let modelWindow = response.sevenDaySonnet ?? response.sevenDayOpus
-            if let modelWindow, let util = modelWindow.utilization {
-                sonnetUtilization = util
-                sonnetResetsAt = modelWindow.resetsAt.flatMap { Self.parseISO8601($0) }
-            } else {
-                sonnetUtilization = nil
-                sonnetResetsAt = nil
-            }
-
-            // Extra usage (costs) — API returns values in cents, convert to dollars
-            if let extra = response.extraUsage, extra.isEnabled == true {
-                extraUsageEnabled = true
-                extraUsageUsed = extra.usedCredits.map { $0 / 100.0 }
-                extraUsageLimit = extra.monthlyLimit.map { $0 / 100.0 }
-                extraUsageCurrency = extra.currency ?? "USD"
-            } else {
-                extraUsageEnabled = false
-                extraUsageUsed = nil
-                extraUsageLimit = nil
-                extraUsageCurrency = nil
-            }
-
-            hasData = true
+            applyResponse(response)
             lastFetchDate = Date()
             _ = await statusFetch
         } catch let error as OAuthUsageError {
@@ -124,7 +90,10 @@ final class UsageDashboardViewModel {
                 lastError = L10n.keychainNotFound(settings.language)
                 errorKind = .auth
             case .rateLimited(let retryAfter):
-                // Keep existing data visible, just show a warning
+                lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
+                errorKind = .other
+            case .rateLimitedWithCache(let cached, let retryAfter):
+                applyCachedResponse(cached)
                 lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
                 errorKind = .other
             default:
@@ -157,6 +126,46 @@ final class UsageDashboardViewModel {
     }
 
     // MARK: - Private
+
+    private func applyResponse(_ response: OAuthUsageResponse) {
+        if let fiveHour = response.fiveHour, let util = fiveHour.utilization {
+            sessionUtilization = util
+            sessionResetsAt = fiveHour.resetsAt.flatMap { Self.parseISO8601($0) }
+        }
+
+        if let sevenDay = response.sevenDay, let util = sevenDay.utilization {
+            weekUtilization = util
+            weekResetsAt = sevenDay.resetsAt.flatMap { Self.parseISO8601($0) }
+        }
+
+        let modelWindow = response.sevenDaySonnet ?? response.sevenDayOpus
+        if let modelWindow, let util = modelWindow.utilization {
+            sonnetUtilization = util
+            sonnetResetsAt = modelWindow.resetsAt.flatMap { Self.parseISO8601($0) }
+        } else {
+            sonnetUtilization = nil
+            sonnetResetsAt = nil
+        }
+
+        if let extra = response.extraUsage, extra.isEnabled == true {
+            extraUsageEnabled = true
+            extraUsageUsed = extra.usedCredits.map { $0 / 100.0 }
+            extraUsageLimit = extra.monthlyLimit.map { $0 / 100.0 }
+            extraUsageCurrency = extra.currency ?? "USD"
+        } else {
+            extraUsageEnabled = false
+            extraUsageUsed = nil
+            extraUsageLimit = nil
+            extraUsageCurrency = nil
+        }
+
+        hasData = true
+    }
+
+    private func applyCachedResponse(_ response: OAuthUsageResponse) {
+        applyResponse(response)
+        // Don't update lastFetchDate — it's cached data, not fresh
+    }
 
     private static func parseISO8601(_ string: String) -> Date? {
         iso8601Formatter.date(from: string)
