@@ -151,10 +151,34 @@ enum L10n {
         }
     }
 
-    static func rateLimitedMessage(_ lang: AppLanguage) -> String {
+    static func rateLimitedMessage(_ lang: AppLanguage, retryAfter: TimeInterval? = nil) -> String {
+        let base: String
         switch lang {
-        case .english: return "Too many requests (429).\nShowing last known data."
-        case .polish: return "Zbyt wiele zapytań (429).\nWyświetlam ostatnie dane."
+        case .english: base = "Too many requests (429)."
+        case .polish: base = "Zbyt wiele zapytań (429)."
+        }
+
+        if let retryAfter, retryAfter > 0 {
+            let minutes = Int(ceil(retryAfter / 60))
+            let timeStr: String
+            switch lang {
+            case .english:
+                timeStr = minutes == 1 ? "Retry in ~1 minute." : "Retry in ~\(minutes) minutes."
+            case .polish:
+                if minutes == 1 {
+                    timeStr = "Ponów za ~1 minutę."
+                } else if minutes < 5 {
+                    timeStr = "Ponów za ~\(minutes) minuty."
+                } else {
+                    timeStr = "Ponów za ~\(minutes) minut."
+                }
+            }
+            return "\(base)\n\(timeStr)"
+        }
+
+        switch lang {
+        case .english: return "\(base)\nShowing last known data."
+        case .polish: return "\(base)\nWyświetlam ostatnie dane."
         }
     }
 

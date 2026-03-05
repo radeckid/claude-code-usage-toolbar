@@ -6,7 +6,7 @@ enum OAuthUsageError: LocalizedError, Sendable {
     case invalidResponse(Int)
     case parseError(String)
     case sessionExpired
-    case rateLimited
+    case rateLimited(retryAfter: TimeInterval?)
 
     var errorDescription: String? {
         switch self {
@@ -79,6 +79,7 @@ final class OAuthUsageService: Sendable {
     }
 
     private func retryWithBackoff(token: String) async throws -> OAuthUsageResponse {
+        var lastRetryAfter: TimeInterval?
         for attempt in 1...Self.maxRetries {
             let delay = Self.baseDelay * pow(2.0, Double(attempt - 1)) // 2s, 4s, 8s
             try await Task.sleep(for: .seconds(delay))
@@ -87,13 +88,14 @@ final class OAuthUsageService: Sendable {
             switch result {
             case .success(let response):
                 return response
-            case .failure(.rateLimited):
+            case .failure(.rateLimited(let retryAfter)):
+                lastRetryAfter = retryAfter
                 continue
             case .failure(let error):
                 throw error
             }
         }
-        throw OAuthUsageError.rateLimited
+        throw OAuthUsageError.rateLimited(retryAfter: lastRetryAfter)
     }
 
     private func callAPI(token: String, honorRetryAfter: Bool = true) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
@@ -114,14 +116,15 @@ final class OAuthUsageService: Sendable {
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
+            let retryAfterSeconds = httpResponse.value(forHTTPHeaderField: "Retry-After")
+                .flatMap { TimeInterval($0) }
+
             // Use Retry-After header once (no recursion), capped at 30s
-            if honorRetryAfter,
-               let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After"),
-               let delay = TimeInterval(retryAfter), delay <= 30 {
+            if honorRetryAfter, let delay = retryAfterSeconds, delay <= 30 {
                 try? await Task.sleep(for: .seconds(delay))
                 return try await callAPI(token: token, honorRetryAfter: false)
             }
-            return .failure(.rateLimited)
+            return .failure(.rateLimited(retryAfter: retryAfterSeconds))
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 200 {
