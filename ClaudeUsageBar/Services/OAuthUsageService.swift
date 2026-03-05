@@ -96,7 +96,7 @@ final class OAuthUsageService: Sendable {
         throw OAuthUsageError.rateLimited
     }
 
-    private func callAPI(token: String) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
+    private func callAPI(token: String, honorRetryAfter: Bool = true) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
         var request = URLRequest(url: Self.usageURL)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -114,12 +114,12 @@ final class OAuthUsageService: Sendable {
         }
 
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
-            // Use Retry-After header if available, otherwise fall back to default backoff
-            if let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After"),
-               let delay = TimeInterval(retryAfter) {
+            // Use Retry-After header once (no recursion), capped at 30s
+            if honorRetryAfter,
+               let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After"),
+               let delay = TimeInterval(retryAfter), delay <= 30 {
                 try? await Task.sleep(for: .seconds(delay))
-                // Re-attempt once using the server-suggested delay
-                return try await callAPI(token: token)
+                return try await callAPI(token: token, honorRetryAfter: false)
             }
             return .failure(.rateLimited)
         }

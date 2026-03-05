@@ -14,6 +14,7 @@ struct MenuBarContentView: View {
             if viewModel.isLoading && viewModel.lastFetchDate == nil {
                 ProgressView(L10n.loading(lang))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(16)
             } else if !viewModel.hasData && viewModel.lastError != nil {
                 noDataView
             } else if viewModel.hasData {
