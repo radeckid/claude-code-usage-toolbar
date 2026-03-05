@@ -44,6 +44,7 @@ final class UsageDashboardViewModel {
     @ObservationIgnored private let oauthService = OAuthUsageService()
     let statusService = ClaudeStatusService()
     @ObservationIgnored private var timerTask: Task<Void, Never>?
+    @ObservationIgnored private var retryAfterOverride: TimeInterval?
 
     nonisolated(unsafe) private static let iso8601Formatter: ISO8601DateFormatter = {
         let f = ISO8601DateFormatter()
@@ -80,6 +81,7 @@ final class UsageDashboardViewModel {
             let response = try await oauthService.fetchUsage()
             applyResponse(response)
             lastFetchDate = Date()
+            retryAfterOverride = nil
             _ = await statusFetch
         } catch let error as OAuthUsageError {
             switch error {
@@ -90,10 +92,12 @@ final class UsageDashboardViewModel {
                 lastError = L10n.keychainNotFound(settings.language)
                 errorKind = .auth
             case .rateLimited(let retryAfter):
+                retryAfterOverride = retryAfter
                 lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
                 errorKind = .other
             case .rateLimitedWithCache(let cached, let retryAfter):
                 applyCachedResponse(cached)
+                retryAfterOverride = retryAfter
                 lastError = L10n.rateLimitedMessage(settings.language, retryAfter: retryAfter)
                 errorKind = .other
             default:
@@ -108,6 +112,12 @@ final class UsageDashboardViewModel {
         isLoading = false
     }
 
+    func manualRefresh() async {
+        retryAfterOverride = nil
+        await refresh()
+        restartAutoRefresh()
+    }
+
     func restartAutoRefresh() {
         startAutoRefresh()
     }
@@ -119,7 +129,9 @@ final class UsageDashboardViewModel {
         timerTask = Task { [weak self] in
             while !Task.isCancelled {
                 await self?.refresh()
-                let interval = self?.settings.refreshIntervalSeconds ?? 300
+                let retryAfter = self?.retryAfterOverride
+                let normalInterval = self?.settings.refreshIntervalSeconds ?? 300
+                let interval = max(Double(normalInterval), retryAfter ?? 0)
                 try? await Task.sleep(for: .seconds(interval))
             }
         }

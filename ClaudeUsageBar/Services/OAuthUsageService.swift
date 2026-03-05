@@ -29,8 +29,6 @@ enum OAuthUsageError: LocalizedError, Sendable {
 
 final class OAuthUsageService: Sendable {
     private static let usageURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
-    private static let maxRetries = 3
-    private static let baseDelay: TimeInterval = 2
 
     private static let cacheURL: URL = {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
@@ -71,17 +69,13 @@ final class OAuthUsageService: Sendable {
             return response
         }
 
-        // If 429, retry with exponential backoff
+        // If 429, return cached data immediately — no retries
         if case .failure(let error) = result,
-           case .rateLimited = error {
-            do {
-                return try await retryWithBackoff(token: token)
-            } catch let retryError as OAuthUsageError {
-                if case .rateLimited(let retryAfter) = retryError, let cached = loadCache() {
-                    throw OAuthUsageError.rateLimitedWithCache(cached: cached, retryAfter: retryAfter)
-                }
-                throw retryError
+           case .rateLimited(let retryAfter) = error {
+            if let cached = loadCache() {
+                throw OAuthUsageError.rateLimitedWithCache(cached: cached, retryAfter: retryAfter)
             }
+            throw error
         }
 
         let response = try result.get()
@@ -108,27 +102,7 @@ final class OAuthUsageService: Sendable {
         }
     }
 
-    private func retryWithBackoff(token: String) async throws -> OAuthUsageResponse {
-        var lastRetryAfter: TimeInterval?
-        for attempt in 1...Self.maxRetries {
-            let delay = Self.baseDelay * pow(2.0, Double(attempt - 1)) // 2s, 4s, 8s
-            try await Task.sleep(for: .seconds(delay))
-
-            let result = try await callAPI(token: token)
-            switch result {
-            case .success(let response):
-                return response
-            case .failure(.rateLimited(let retryAfter)):
-                lastRetryAfter = retryAfter
-                continue
-            case .failure(let error):
-                throw error
-            }
-        }
-        throw OAuthUsageError.rateLimited(retryAfter: lastRetryAfter)
-    }
-
-    private func callAPI(token: String, honorRetryAfter: Bool = true) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
+    private func callAPI(token: String) async throws -> Result<OAuthUsageResponse, OAuthUsageError> {
         var request = URLRequest(url: Self.usageURL)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -148,12 +122,6 @@ final class OAuthUsageService: Sendable {
         if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
             let retryAfterSeconds = httpResponse.value(forHTTPHeaderField: "Retry-After")
                 .flatMap { TimeInterval($0) }
-
-            // Use Retry-After header once (no recursion), capped at 30s
-            if honorRetryAfter, let delay = retryAfterSeconds, delay <= 30 {
-                try? await Task.sleep(for: .seconds(delay))
-                return try await callAPI(token: token, honorRetryAfter: false)
-            }
             return .failure(.rateLimited(retryAfter: retryAfterSeconds))
         }
 

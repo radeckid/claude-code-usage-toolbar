@@ -88,7 +88,7 @@ struct MenuBarContentView: View {
                 .multilineTextAlignment(.center)
 
             Button(L10n.retry(lang)) {
-                Task { await viewModel.refresh() }
+                Task { await viewModel.manualRefresh() }
             }
             .buttonStyle(.bordered)
             .controlSize(.small)
@@ -116,7 +116,7 @@ struct MenuBarContentView: View {
                     .controlSize(.small)
             }
 
-            Button(action: { Task { await viewModel.refresh() } }) {
+            Button(action: { Task { await viewModel.manualRefresh() } }) {
                 Image(systemName: "arrow.clockwise")
             }
             .buttonStyle(.borderless)
