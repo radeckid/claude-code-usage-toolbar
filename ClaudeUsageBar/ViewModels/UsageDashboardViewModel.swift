@@ -20,14 +20,16 @@ final class UsageDashboardViewModel {
     var sessionResetsAt: Date?
     var weekUtilization: Double?
     var weekResetsAt: Date?
-    var sonnetUtilization: Double?
-    var sonnetResetsAt: Date?
+    var modelWeekUtilization: Double?
+    var modelWeekResetsAt: Date?
+    var modelWeekName: String?
 
     // Extra usage (cost tracking)
     var extraUsageEnabled = false
     var extraUsageUsed: Double?
     var extraUsageLimit: Double?
     var extraUsageCurrency: String?
+    var extraUsagePercent: Double?
 
     var hasData = false
     var lastError: String?
@@ -151,25 +153,46 @@ final class UsageDashboardViewModel {
             weekResetsAt = sevenDay.resetsAt.flatMap { Self.parseISO8601($0) }
         }
 
-        let modelWindow = response.sevenDaySonnet ?? response.sevenDayOpus
-        if let modelWindow, let util = modelWindow.utilization {
-            sonnetUtilization = util
-            sonnetResetsAt = modelWindow.resetsAt.flatMap { Self.parseISO8601($0) }
+        // Model-scoped weekly limit: new source is `limits.weekly_scoped`; fall back to
+        // the legacy per-model windows (both null in the current API) for old cached data.
+        if let scoped = response.limits?.first(where: { $0.scope?.model?.displayName != nil }),
+           let util = scoped.percent {
+            modelWeekUtilization = util
+            modelWeekResetsAt = scoped.resetsAt.flatMap { Self.parseISO8601($0) }
+            modelWeekName = scoped.scope?.model?.displayName
+        } else if let modelWindow = response.sevenDaySonnet ?? response.sevenDayOpus,
+                  let util = modelWindow.utilization {
+            modelWeekUtilization = util
+            modelWeekResetsAt = modelWindow.resetsAt.flatMap { Self.parseISO8601($0) }
+            modelWeekName = response.sevenDaySonnet != nil ? "Sonnet" : "Opus"
         } else {
-            sonnetUtilization = nil
-            sonnetResetsAt = nil
+            modelWeekUtilization = nil
+            modelWeekResetsAt = nil
+            modelWeekName = nil
         }
 
-        if let extra = response.extraUsage, extra.isEnabled == true {
+        // Cost bar: prefer the richer `spend` object (honors exponent + API percent),
+        // fall back to the legacy `extra_usage` fields.
+        if let spend = response.spend, spend.enabled == true,
+           let used = spend.used?.amount, let limit = spend.limit?.amount {
             extraUsageEnabled = true
-            extraUsageUsed = extra.usedCredits.map { $0 / 100.0 }
-            extraUsageLimit = extra.monthlyLimit.map { $0 / 100.0 }
+            extraUsageUsed = used
+            extraUsageLimit = limit
+            extraUsageCurrency = spend.used?.currency ?? spend.limit?.currency ?? "USD"
+            extraUsagePercent = spend.percent
+        } else if let extra = response.extraUsage, extra.isEnabled == true {
+            let divisor = pow(10.0, Double(extra.decimalPlaces ?? 2))
+            extraUsageEnabled = true
+            extraUsageUsed = extra.usedCredits.map { $0 / divisor }
+            extraUsageLimit = extra.monthlyLimit.map { $0 / divisor }
             extraUsageCurrency = extra.currency ?? "USD"
+            extraUsagePercent = extra.utilization
         } else {
             extraUsageEnabled = false
             extraUsageUsed = nil
             extraUsageLimit = nil
             extraUsageCurrency = nil
+            extraUsagePercent = nil
         }
 
         hasData = true

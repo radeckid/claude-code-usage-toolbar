@@ -31,8 +31,9 @@ final class OAuthUsageService: Sendable {
     private static let usageURL = URL(string: "https://api.anthropic.com/api/oauth/usage")!
 
     private static let cacheURL: URL = {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let dir = appSupport.appendingPathComponent("ClaudeUsageBar", isDirectory: true)
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            ?? FileManager.default.temporaryDirectory
+        let dir = base.appendingPathComponent("ClaudeUsageBar", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir.appendingPathComponent("last_usage.json")
     }()

@@ -36,18 +36,34 @@ struct MenuBarLabel: View {
                 case .other:
                     Image(systemName: "exclamationmark.triangle")
                 }
-            } else if progress >= 1.0 {
-                Text("😢")
-                    .font(.system(size: 13))
             } else {
-                Image(nsImage: renderCircle(progress: progress))
+                switch viewModel.settings.menuBarStyle {
+                case .circle:
+                    circleLabel
+                case .bars:
+                    // Same order as the popover bars: session → week → model
+                    Image(nsImage: renderBars([
+                        viewModel.sessionUtilization,
+                        viewModel.weekUtilization,
+                        viewModel.modelWeekUtilization
+                    ].map { $0 ?? 0 }))
+                }
             }
-            if let session = viewModel.sessionUtilization {
-                Text("\(Int(session))%")
-                    .monospacedDigit()
-            } else if let resetsAt = viewModel.sessionResetsAt {
-                Text(formatResetTime(resetsAt)).fixedSize(horizontal: false, vertical: true)
-            }
+        }
+    }
+
+    @ViewBuilder private var circleLabel: some View {
+        if progress >= 1.0 {
+            Text("😢")
+                .font(.system(size: 13))
+        } else {
+            Image(nsImage: renderCircle(progress: progress))
+        }
+        if let session = viewModel.sessionUtilization {
+            Text("\(session.safePercentInt)%")
+                .monospacedDigit()
+        } else if let resetsAt = viewModel.sessionResetsAt {
+            Text(formatResetTime(resetsAt)).fixedSize(horizontal: false, vertical: true)
         }
     }
 
@@ -83,6 +99,49 @@ struct MenuBarLabel: View {
                 arcPath.lineCapStyle = .round
                 NSColor.black.setStroke()
                 arcPath.stroke()
+            }
+
+            return true
+        }
+        image.isTemplate = true
+        return image
+    }
+
+    /// Mini vertical bar chart (monochrome template, matches the ring). Bars rise from the
+    /// bottom; each value is a 0–100 percentage. Rendered left→right in the given order.
+    private func renderBars(_ values: [Double]) -> NSImage {
+        let barWidth: CGFloat = 3
+        let spacing: CGFloat = 2
+        let barHeight: CGFloat = 14
+        let canvasHeight: CGFloat = 16
+        let count = values.count
+        let width = CGFloat(count) * barWidth + CGFloat(max(0, count - 1)) * spacing
+
+        let image = NSImage(size: NSSize(width: max(width, 1), height: canvasHeight), flipped: false) { _ in
+            let yBottom = (canvasHeight - barHeight) / 2
+
+            for (index, value) in values.enumerated() {
+                let x = CGFloat(index) * (barWidth + spacing)
+
+                // Faint full-height track (low alpha = faint in template mode)
+                let track = NSBezierPath(
+                    roundedRect: NSRect(x: x, y: yBottom, width: barWidth, height: barHeight),
+                    xRadius: 1, yRadius: 1
+                )
+                NSColor.black.withAlphaComponent(0.25).setFill()
+                track.fill()
+
+                // Solid value bar rising from the bottom (full alpha = bold in template mode)
+                let clamped = min(max(value, 0), 100) / 100
+                let filledHeight = barHeight * clamped
+                if filledHeight > 0 {
+                    let bar = NSBezierPath(
+                        roundedRect: NSRect(x: x, y: yBottom, width: barWidth, height: filledHeight),
+                        xRadius: 1, yRadius: 1
+                    )
+                    NSColor.black.setFill()
+                    bar.fill()
+                }
             }
 
             return true

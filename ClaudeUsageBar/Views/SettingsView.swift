@@ -40,6 +40,11 @@ struct SettingsView: View {
             }
 
             Section(L10n.display(lang)) {
+                Picker(L10n.menuBarStyle(lang), selection: $viewModel.settings.menuBarStyle) {
+                    Text(L10n.menuBarStyleCircle(lang)).tag(MenuBarStyle.circle)
+                    Text(L10n.menuBarStyleBars(lang)).tag(MenuBarStyle.bars)
+                }
+
                 Picker(L10n.language(lang), selection: $viewModel.settings.language) {
                     ForEach(AppLanguage.allCases) { language in
                         Text(language.displayName).tag(language)

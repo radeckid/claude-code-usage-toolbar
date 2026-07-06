@@ -5,12 +5,14 @@ struct RateLimitView: View {
     let sessionResetsAt: Date?
     let weekUtilization: Double?
     let weekResetsAt: Date?
-    let sonnetUtilization: Double?
-    let sonnetResetsAt: Date?
+    let modelWeekUtilization: Double?
+    let modelWeekResetsAt: Date?
+    let modelWeekName: String?
     let extraUsageEnabled: Bool
     let extraUsageUsed: Double?
     let extraUsageLimit: Double?
     let extraUsageCurrency: String?
+    let extraUsagePercent: Double?
     let lang: AppLanguage
 
     var body: some View {
@@ -31,16 +33,21 @@ struct RateLimitView: View {
                 )
             }
 
-            if let sonnet = sonnetUtilization {
+            if let modelWeek = modelWeekUtilization {
                 rateLimitBar(
-                    label: L10n.currentWeekSonnet(lang),
-                    utilization: sonnet,
-                    resetsAt: sonnetResetsAt
+                    label: L10n.currentWeekModel(lang, model: modelWeekName ?? ""),
+                    utilization: modelWeek,
+                    resetsAt: modelWeekResetsAt
                 )
             }
 
             if extraUsageEnabled, let used = extraUsageUsed, let limit = extraUsageLimit {
-                extraUsageBar(used: used, limit: limit, currency: extraUsageCurrency ?? "USD")
+                extraUsageBar(
+                    used: used,
+                    limit: limit,
+                    currency: extraUsageCurrency ?? "USD",
+                    percent: extraUsagePercent
+                )
             }
         }
     }
@@ -70,7 +77,7 @@ struct RateLimitView: View {
             .frame(height: 10)
 
             HStack {
-                Text("\(Int(utilization))% \(L10n.used(lang))")
+                Text("\(utilization.safePercentInt)% \(L10n.used(lang))")
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(textColor(for: utilization))
 
@@ -85,8 +92,8 @@ struct RateLimitView: View {
         }
     }
 
-    private func extraUsageBar(used: Double, limit: Double, currency: String) -> some View {
-        let utilization = limit > 0 ? (used / limit) * 100 : 0
+    private func extraUsageBar(used: Double, limit: Double, currency: String, percent: Double?) -> some View {
+        let utilization = percent ?? (limit > 0 ? (used / limit) * 100 : 0)
 
         return VStack(alignment: .leading, spacing: 6) {
             HStack {

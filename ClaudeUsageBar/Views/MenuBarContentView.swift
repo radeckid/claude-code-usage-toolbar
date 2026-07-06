@@ -37,12 +37,14 @@ struct MenuBarContentView: View {
                     sessionResetsAt: viewModel.sessionResetsAt,
                     weekUtilization: viewModel.weekUtilization,
                     weekResetsAt: viewModel.weekResetsAt,
-                    sonnetUtilization: viewModel.sonnetUtilization,
-                    sonnetResetsAt: viewModel.sonnetResetsAt,
+                    modelWeekUtilization: viewModel.modelWeekUtilization,
+                    modelWeekResetsAt: viewModel.modelWeekResetsAt,
+                    modelWeekName: viewModel.modelWeekName,
                     extraUsageEnabled: viewModel.extraUsageEnabled,
                     extraUsageUsed: viewModel.extraUsageUsed,
                     extraUsageLimit: viewModel.extraUsageLimit,
                     extraUsageCurrency: viewModel.extraUsageCurrency,
+                    extraUsagePercent: viewModel.extraUsagePercent,
                     lang: lang
                 )
                 .padding(16)

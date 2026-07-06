@@ -40,10 +40,10 @@ enum L10n {
         }
     }
 
-    static func currentWeekSonnet(_ lang: AppLanguage) -> String {
+    static func currentWeekModel(_ lang: AppLanguage, model: String) -> String {
         switch lang {
-        case .english: return "Current week (Sonnet)"
-        case .polish: return "Bieżący tydzień (Sonnet)"
+        case .english: return "Current week (\(model))"
+        case .polish: return "Bieżący tydzień (\(model))"
         }
     }
 
@@ -233,6 +233,27 @@ enum L10n {
         }
     }
 
+    static func menuBarStyle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "Menu bar icon"
+        case .polish: return "Ikona w pasku menu"
+        }
+    }
+
+    static func menuBarStyleCircle(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "Ring"
+        case .polish: return "Koło"
+        }
+    }
+
+    static func menuBarStyleBars(_ lang: AppLanguage) -> String {
+        switch lang {
+        case .english: return "Bars"
+        case .polish: return "Słupki"
+        }
+    }
+
     static func system(_ lang: AppLanguage) -> String {
         switch lang {
         case .english: return "System"
@@ -359,5 +380,14 @@ enum L10n {
         case .english: return "Major Outage"
         case .polish: return "Poważna awaria"
         }
+    }
+}
+
+extension Double {
+    /// Finite, clamped integer percent for display — guards against NaN/∞/overflow from the API
+    /// (a plain `Int(Double)` traps on non-finite or out-of-range values).
+    var safePercentInt: Int {
+        guard isFinite else { return 0 }
+        return Int(min(max(self, 0), 9999))
     }
 }
