@@ -129,10 +129,30 @@ APPCAST_EOF
     echo "==> Creating GitHub release v$VERSION..."
     git tag -a "v$VERSION" -m "Release v$VERSION"
     git push origin "v$VERSION"
-    gh release create "v$VERSION" \
-        "$BUILD_DIR/$DMG_NAME" \
-        "$BUILD_DIR/appcast.xml" \
-        --title "v$VERSION" \
-        --notes "Claude Usage Bar v$VERSION"
+
+    # Release notes: prefer a hand-written per-version file, then a generic RELEASE_NOTES.md,
+    # otherwise let GitHub auto-generate a "What's Changed" from commits since the last tag.
+    NOTES_FILE=""
+    if [ -f "release_notes/v${VERSION}.md" ]; then
+        NOTES_FILE="release_notes/v${VERSION}.md"
+    elif [ -f "RELEASE_NOTES.md" ]; then
+        NOTES_FILE="RELEASE_NOTES.md"
+    fi
+
+    if [ -n "$NOTES_FILE" ]; then
+        echo "==> Using release notes from $NOTES_FILE"
+        gh release create "v$VERSION" \
+            "$BUILD_DIR/$DMG_NAME" \
+            "$BUILD_DIR/appcast.xml" \
+            --title "v$VERSION" \
+            --notes-file "$NOTES_FILE"
+    else
+        echo "==> No release notes file found — auto-generating What's Changed from commits"
+        gh release create "v$VERSION" \
+            "$BUILD_DIR/$DMG_NAME" \
+            "$BUILD_DIR/appcast.xml" \
+            --title "v$VERSION" \
+            --generate-notes
+    fi
     echo "==> Release published: https://github.com/$GITHUB_REPO/releases/tag/v$VERSION"
 fi
