@@ -383,6 +383,31 @@ enum L10n {
     }
 }
 
+enum ResetTimeFormatter {
+    /// Compact, localized reset moment: time of day if the date is today, otherwise a short date.
+    static func string(from date: Date, lang: AppLanguage) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: lang.rawValue)
+
+        if Calendar.current.isDateInToday(date) {
+            switch lang {
+            case .english:
+                formatter.dateFormat = "h:mma"
+                formatter.amSymbol = "am"
+                formatter.pmSymbol = "pm"
+            case .polish:
+                formatter.dateFormat = "HH:mm"
+            }
+        } else {
+            switch lang {
+            case .english: formatter.dateFormat = "MMM d"
+            case .polish: formatter.dateFormat = "d MMM"
+            }
+        }
+        return formatter.string(from: date)
+    }
+}
+
 extension Double {
     /// Finite, clamped integer percent for display — guards against NaN/∞/overflow from the API
     /// (a plain `Int(Double)` traps on non-finite or out-of-range values).

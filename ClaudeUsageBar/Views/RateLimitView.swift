@@ -84,7 +84,7 @@ struct RateLimitView: View {
                 Spacer()
 
                 if let resetsAt {
-                    Text("\(L10n.resetsAt(lang)) \(formatResetTime(resetsAt, lang: lang))")
+                    Text("\(L10n.resetsAt(lang)) \(ResetTimeFormatter.string(from: resetsAt, lang: lang))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -154,31 +154,5 @@ struct RateLimitView: View {
         if utilization >= 90 { return .red }
         if utilization >= 70 { return .orange }
         return .secondary
-    }
-
-    private func formatResetTime(_ date: Date, lang: AppLanguage) -> String {
-        let calendar = Calendar.current
-
-        if calendar.isDateInToday(date) {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: lang.rawValue)
-            switch lang {
-            case .english:
-                formatter.dateFormat = "h:mma"
-                formatter.amSymbol = "am"
-                formatter.pmSymbol = "pm"
-            case .polish:
-                formatter.dateFormat = "HH:mm"
-            }
-            return formatter.string(from: date)
-        } else {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: lang.rawValue)
-            switch lang {
-            case .english: formatter.dateFormat = "MMM d"
-            case .polish: formatter.dateFormat = "d MMM"
-            }
-            return formatter.string(from: date)
-        }
     }
 }

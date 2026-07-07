@@ -36,6 +36,8 @@ struct MenuBarLabel: View {
                 case .other:
                     Image(systemName: "exclamationmark.triangle")
                 }
+            } else if progress >= 1.0 {
+                exhaustedLabel
             } else {
                 switch viewModel.settings.menuBarStyle {
                 case .circle:
@@ -52,26 +54,27 @@ struct MenuBarLabel: View {
         }
     }
 
-    @ViewBuilder private var circleLabel: some View {
-        if progress >= 1.0 {
-            Text("😢")
-                .font(.system(size: 13))
+    /// Session limit exhausted — same label in both styles: hourglass + when it resets.
+    @ViewBuilder private var exhaustedLabel: some View {
+        Image(systemName: "hourglass")
+        if let resetsAt = viewModel.sessionResetsAt {
+            Text(ResetTimeFormatter.string(from: resetsAt, lang: viewModel.settings.language))
+                .monospacedDigit()
         } else {
-            Image(nsImage: renderCircle(progress: progress))
+            Text("100%")
+                .monospacedDigit()
         }
+    }
+
+    @ViewBuilder private var circleLabel: some View {
+        Image(nsImage: renderCircle(progress: progress))
         if let session = viewModel.sessionUtilization {
             Text("\(session.safePercentInt)%")
                 .monospacedDigit()
         } else if let resetsAt = viewModel.sessionResetsAt {
-            Text(formatResetTime(resetsAt)).fixedSize(horizontal: false, vertical: true)
+            Text(ResetTimeFormatter.string(from: resetsAt, lang: viewModel.settings.language))
+                .fixedSize(horizontal: false, vertical: true)
         }
-    }
-
-    private func formatResetTime(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = Calendar.current.isDateInToday(date) ? "HH:mm" : "MMM d"
-        return formatter.string(from: date)
     }
 
     private func renderCircle(progress: Double) -> NSImage {
